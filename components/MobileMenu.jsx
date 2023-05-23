@@ -16,7 +16,7 @@ const subMenuData = [
     { id: 4, name: "Football shoes", doc_count: 107 },
 ];
 
-export default function MobileMenu({ ShowCatMenu, setShowCatMenu, setMobileMenu }) {
+export default function MobileMenu({ ShowCatMenu, setShowCatMenu, setMobileMenu, categories }) {
     return (
         <ul className="flex flex-col md:hidden font-bold absolute top-[50px] left-0 w-full h-[calc(100vh-50px)] bg-black border-t text-white">
             {data.map((item) => {
@@ -33,20 +33,28 @@ export default function MobileMenu({ ShowCatMenu, setShowCatMenu, setMobileMenu 
 
                                 {ShowCatMenu && (
                                     <ul className="bg-black/[0.05] -mx-5 mt-4 -mb-4">
-                                        {subMenuData.map((submenu) => {
-                                            return (
-                                                <Link key={submenu.id} href="/" onClick={() => {
-                                                    setShowCatMenu(false)
-                                                    setMobileMenu(false)
-                                                }}
-                                                >
-                                                    <li className="py-4 px-8 border-t flex justify-between">
-                                                        {submenu.name}
-                                                        <span className="opacity-50 text-sm">78</span>
-                                                    </li>
-                                                </Link>
-                                            )
-                                        })}
+                                        {categories?.map(
+                                            ({ attributes: c, id }) => {
+                                                return (
+                                                    <Link
+                                                        key={id}
+                                                        href={`/category/${c.slug}`}
+                                                        onClick={() =>
+                                                            setShowCatMenu(
+                                                                false
+                                                            )
+                                                        }
+                                                    >
+                                                        <li className="h-12 flex justify-between items-center px-3 hover:bg-black/[0.03] rounded-md">
+                                                            {c.name}
+                                                            <span className="opacity-50 text-sm">
+                                                                {`(${c.products.data.length})`}
+                                                            </span>
+                                                        </li>
+                                                    </Link>
+                                                );
+                                            }
+                                        )}
                                     </ul>
                                 )}
                             </li>
@@ -54,7 +62,7 @@ export default function MobileMenu({ ShowCatMenu, setShowCatMenu, setMobileMenu 
                             <li className="py-4 px-5 border-b">
                                 <Link href={item?.url}
                                     onClick={() => setMobileMenu(false)}
-                                    >
+                                >
                                     {item.name}
                                 </Link>
                             </li>

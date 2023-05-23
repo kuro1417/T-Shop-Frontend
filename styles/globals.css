@@ -5,3 +5,22 @@
 .icon{
     @apply w-8 md:w-12 h-8 md:h-12 rounded-full flex justify-center items-center hover:bg-slate-300 hover:text-black cursor-pointer relative;
 }
+
+.imgItems{
+    width: 500px;
+    height: 500px;
+}
+
+body{
+    background: #dfe6e9;
+}
+
+.markdown ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: disc;
+    margin: 20px 0;
+}
+.markdown ul li {
+    margin: 10px 0;
+}

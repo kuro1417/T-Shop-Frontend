@@ -8,13 +8,18 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { BsCart } from "react-icons/bs";
 import { BiMenuAltRight } from "react-icons/bi";
 import { VscChromeClose } from "react-icons/vsc";
-
+import { fetchDataFromApi } from "@/utils/api";
+import { useSelector } from "react-redux";
 
 export default function Header() {
     const [mobileMenu, setMobileMenu] = useState(false);
     const [ShowCatMenu, setShowCatMenu] = useState(false);
     const [show, setShow] = useState('translate-y-0');
     const [lastScrollY, setLastScrollY] = useState(0);
+    const [categories,setCategories] = useState('null');
+
+    const {cartItems} = useSelector((state => state.cart));
+
     const controlNavbar = () => {
         if (window.scrollY > 200) {
             if (window.scrollY > lastScrollY && !mobileMenu) {
@@ -35,17 +40,27 @@ export default function Header() {
             window.removeEventListener('scroll', controlNavbar);
         }
     }, [lastScrollY])
+
+    useEffect(() => {
+        fetchCategory();
+    },[])
+    
+    const fetchCategory = async ()=>{
+        const {data} = await fetchDataFromApi('/api/categories?populate=*')
+        setCategories(data);
+    }
     return (
         <div className={`w-full h-[50px] md:h-[80px] bg-black flex items-center 
             justify-center z-20 sticky top-0 transition-transform duration-300 ${show}`} >
             <Wrapper className="h-[60px] flex justify-between items-center">
                 <Link href={'/'}>
-                    <img src="img/Logo.png" className={`w-[40px] md:w-[80px]`} />
+                    <img src="https://images.squarespace-cdn.com/content/v1/54c566cbe4b0f7430cbc6a73/1559853973996-4CLJDPC15YS38C6GXLP8/Samurai.png" className={`w-[40px] md:w-[80px]`} />
                 </Link>
 
                 <Menu
                     ShowCatMenu={ShowCatMenu}
                     setShowCatMenu={setShowCatMenu}
+                    categories={categories}
                 />
 
                 {mobileMenu && (
@@ -53,6 +68,7 @@ export default function Header() {
                         ShowCatMenu={ShowCatMenu}
                         setShowCatMenu={setShowCatMenu}
                         setMobileMenu={setMobileMenu}
+                        categories={categories}
                     />)}
 
                 <div className="flex items-center gap-2 text-white">
@@ -65,12 +81,12 @@ export default function Header() {
                     </div>
 
                     <Link href='/cart'>
-                        <div className="icon">
+                    {cartItems.length>=0 && <div className="icon">
                             <BsCart className="text-[15px] md:text-[20px]" />
                             <div className="h-[14px] md:h-[18px] min-w-[14px] md:min-w-[18px]
                         rounded-full bg-red-600 absolute top-1 left-5 md:left-7 text-white 
-                        text-[10px] md-text-[12px] flex justify-center items-center px-[2px] md:px-[5px]">5</div>
-                        </div>
+                        text-[10px] md-text-[12px] flex justify-center items-center px-[2px] md:px-[5px]">{cartItems.length}</div>
+                        </div>}
                     </Link>
 
                     {/*Moblie icon*/}
